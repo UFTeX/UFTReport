@@ -95,7 +95,7 @@ As listas de símbolos e abreviaturas são opcionais, embora altamente recomenda
 Estas listas são lexicograficamente classificadas usando o programa \emph{MakeIndex}, que é parte de qualquer implementação _LaTeX_. _MakeIndex_ precisa de dois comandos para criar uma lista final ordenada: um que gera uma lista de entradas e outro que indica a posição onde a lista será impressa. Para gerar as listas de símbolos e abreviaturas, a classe _uftreport_ fornece os comandos ```\makeloabreviations``` e ```\makelosymbols```, respectivamente. Eles devem ser chamados no preâmbulo do documento. Os comandos ```\printlosymbols``` e ```printloabbreviations``` tem que ser invocados no ponto onde você quer que estas listas apareçam, por exemplo, seguindo a lista de tabelas como por exemplo:
 
 ```latex
-\documentclass[tcc]{uftreport}
+\documentclass[report]{uftreport}
 % --------------------------------------------------------------------- %
 \usepackage[alf,abnt-emphasize=bf]{abntex2cite}
 \renewcommand{\backrefpagesname}{}
@@ -180,8 +180,8 @@ Estas listas são lexicograficamente classificadas usando o programa \emph{MakeI
 Uma vez que você compila o _latex_, ele criará dois arquivos com extensões **abx** e **syx**, que contêm dados de entrada \emph{MakeIndex}. Eles devem ser processados com _makeindex_ a fim de obter as listas produzidas corretamente, redirecionando a saída para arquivos com extensão **lab** e **los** respectivamente:
 
 ```
-makeindex -s uftreport.ist -o tcc_exemplo.lab tcc_exemplo.abx
-makeindex -s uftreport.ist -o tcc_exemplo.los tcc_exemplo.syx
+makeindex -s uftreport.ist -o report_exemplo.lab report_exemplo.abx
+makeindex -s uftreport.ist -o report_exemplo.los report_exemplo.syx
 ```
 
 Observe a opção **-s** para especificar o estilo **uftreport.ist**. Agora, compile o _latex_ duas vezes para obter as referências e está feito. % explicar melhor isso aqui. Especificar com mais clareza a ordem em que os comandos devem ser feitos, ou seja, explicar melhor o processo.
@@ -223,7 +223,7 @@ e o pdflatex irá procurar em primeiro lugar um arquivo chamado _nome-do-arquivo
 Sabe-se que os dados bibliográficos podem ser facilmente mantidos com o auxílio do BibTeX. A forma correta de utilizar este recurso é  incluindo suas referências BibTeX sem a extensão **bib**, como no exemplo a seguir:
 
 ```latex
-\documentclass[tcc2]{uftreport}
+\documentclass[report]{uftreport}
 % --------------------------------------------------------------------- %
 \usepackage[alf,abnt-emphasize=bf]{abntex2cite}
 \renewcommand{\backrefpagesname}{}
@@ -243,7 +243,7 @@ Sabe-se que os dados bibliográficos podem ser facilmente mantidos com o auxíli
 % --------------------------------------------------------------------- %
 % Bibliografia
 % --------------------------------------------------------------------- %
-\bibliography{tcc_exemplo}
+\bibliography{bibliografia}
 .
 .
 .
