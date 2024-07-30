@@ -221,6 +221,11 @@ xrightmargin=10pt
     \newcommand\@degreename{Acadêmico}
 }
 
+\DeclareOption{project}{
+    \newcommand\local@doctype{Projeto}
+    \newcommand\@degreename{Acadêmico}
+}
+
 \newcommand\department[1]{%
   \ifthenelse{\equal{#1}{EC}}
     {\global\def\local@deptname{Engenharia Civil}
@@ -234,6 +239,9 @@ xrightmargin=10pt
   \ifthenelse{\equal{#1}{CC}}
     {\global\def\local@deptname{Ci{\^ e}ncia da Computa{\c c}{\~ a}o}
      \global\def\foreign@deptname{Computer Science}}{}
+   \ifthenelse{\equal{#1}{LC}}
+    {\global\def\local@deptname{Licenciatura em Computa{\c c}{\~ a}o}
+     \global\def\foreign@deptname{Bachelor's degree in computing}}{}
    \ifthenelse{\equal{#1}{AL}}
     {\global\def\local@deptname{Engenharia de Alimentos}
      \global\def\foreign@deptname{Food Engineering}}{}
