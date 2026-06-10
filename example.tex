@@ -1,0 +1,199 @@
+%% exemplo-relatorio.tex
+%% Exemplo de uso da classe uftreport
+%%
+%% Compilar com:
+%%   pdflatex exemplo-relatorio.tex
+%%   bibtex   exemplo-relatorio   (se houver referências BibTeX)
+%%   pdflatex exemplo-relatorio.tex
+%%   pdflatex exemplo-relatorio.tex
+%%
+%% São necessárias ao menos duas passagens do pdflatex para que
+%% a paginação (via zref) e as referências cruzadas fiquem corretas.
+%%
+%% ── Opções de tipo de documento ───────────────────────────────────────
+%%   report           → trabalho de disciplina ou relatório (padrão)
+%%   projectresearch  → projeto de pesquisa (PIBIC, TCC, etc.)
+%%   projectextension → projeto de extensão
+%%   manual           → manual técnico (cabeçalhos de capítulo maiores)
+%%   techreport       → relatório técnico numerado (exibe número TR na capa)
+%%
+%% ── Cursos disponíveis em \department{} ───────────────────────────────
+%%   CC  → Ciência da Computação (padrão)
+%%   LC  → Licenciatura em Computação
+%%   EC  → Engenharia Civil
+%%   EE  → Engenharia Elétrica
+%%
+%% ── Observações sobre o abntex2cite ───────────────────────────────────
+%%   Não inclua \renewcommand{\backrefpagesname}, \renewcommand{\backref}
+%%   nem \renewcommand*{\backrefalt} — a classe não carrega o pacote
+%%   backref e esses comandos não existem.
+
+\documentclass[techreport]{uftreport}
+
+\usepackage[alf,abnt-emphasize=bf]{abntex2cite}
+
+% ── Metadados do documento ─────────────────────────────────────────────
+\title{Título do Trabalho ou Relatório}
+\foreigntitle{Title of the Work or Report}
+
+\author{Nome}{Sobrenome}
+% \author{Segundo}{Autor}   % repita para cada coautor
+
+\advisor{Prof.}{João}{Silva}{Dr.}
+% \advisor{Profa.}{Maria}{Souza}{Dra.}   % repita para coorientador(a)
+
+\department{CC}   % CC | LC | EC | EE
+
+\class{Algoritmos e Estruturas de Dados II -- 2024.1}
+% Remova \class{} se o documento não for vinculado a uma disciplina
+
+% Número TR — usado apenas com a opção techreport
+\TRNumber{001}
+
+\date{1}{6}{2026}   % dia, mês, ano
+
+% ── Palavras-chave (aparecem ao final do Resumo e do Abstract) ─────────
+\keyword{Computação}
+\keyword{Algoritmos}
+\keyword{LaTeX}
+
+\foreignkeyword{Computer Science}
+\foreignkeyword{Algorithms}
+\foreignkeyword{LaTeX}
+
+% ======================================================================
+\begin{document}
+
+% ── Elementos pré-textuais ─────────────────────────────────────────────
+\frontmatter        % desativa numeração de páginas, estilo vazio
+
+\maketitle          % capa no estilo UFT/CC
+
+\makefrontpage      % folha de rosto com texto gerado pela classe
+\newpage
+
+% \dedication{À minha família, pelo apoio incondicional.}
+
+% \begin{acknowledgement}
+%   Agradeço ao professor orientador pela paciência e dedicação.
+% \end{acknowledgement}
+
+\begin{abstract}
+Este documento exemplifica o uso da classe \texttt{uftreport} para
+a produção de relatórios técnicos, manuais e trabalhos de disciplinas
+do Curso de Ciência da Computação da Universidade Federal do Tocantins.
+A classe oferece cinco modos de uso --- \texttt{report},
+\texttt{projectresearch}, \texttt{projectextension}, \texttt{manual}
+e \texttt{techreport} --- e incorpora o padrão visual institucional da UFT.
+\end{abstract}
+
+\begin{foreignabstract}
+This document illustrates the use of the \texttt{uftreport} class for
+producing technical reports, manuals and course assignments for the
+Computer Science program at the Universidade Federal do Tocantins.
+\end{foreignabstract}
+
+\tableofcontents
+\listoffigures    % remova se não houver figuras
+\listoftables     % remova se não houver tabelas
+
+% ── Texto principal ────────────────────────────────────────────────────
+\mainmatter         % ativa numeração árabe
+
+% \ChapterStart marca a página em que a numeração deve começar.
+% Deve ser chamado imediatamente antes do primeiro \chapter.
+\ChapterStart{first}{Introdução}
+
+% ======================================================================
+\chapter{Introdução}
+
+Este é o primeiro capítulo. O texto segue as normas de formatação
+definidas na classe, com espaçamento 1,5, margens ABNT e cabeçalhos
+no estilo UFT/CC.
+
+\section{Contexto}
+
+Texto da seção. A seção é formatada com \textbf{negrito azul} e uma
+linha horizontal discreta abaixo do título.
+
+\subsection{Motivação}
+
+Texto da subseção.
+
+\subsubsection{Objetivo específico}
+
+Texto de subsubseção.
+
+% ======================================================================
+\chapter{Fundamentação Teórica}
+
+\section{Exemplo de código-fonte}
+
+O ambiente \texttt{lstlisting} está pré-configurado com destaque
+sintático e numeração de linhas:
+
+\begin{lstlisting}[language=Python, caption={Busca binária em Python}]
+def busca_binaria(vetor, alvo):
+    esq, dir = 0, len(vetor) - 1
+    while esq <= dir:
+        meio = (esq + dir) // 2
+        if vetor[meio] == alvo:
+            return meio
+        elif vetor[meio] < alvo:
+            esq = meio + 1
+        else:
+            dir = meio - 1
+    return -1
+\end{lstlisting}
+
+\section{Exemplo de tabela}
+
+\begin{table}[ht]
+\centering
+\caption{Comparação de algoritmos de ordenação}
+\begin{tabular}{lccl}
+\toprule
+\textbf{Algoritmo} & \textbf{Melhor} & \textbf{Pior} & \textbf{Estável} \\
+\midrule
+Bubble Sort   & $O(n)$       & $O(n^2)$      & Sim \\
+Merge Sort    & $O(n\log n)$ & $O(n\log n)$  & Sim \\
+Quick Sort    & $O(n\log n)$ & $O(n^2)$      & Não \\
+Heap Sort     & $O(n\log n)$ & $O(n\log n)$  & Não \\
+\bottomrule
+\end{tabular}
+\label{tab:algoritmos}
+\end{table}
+
+% ======================================================================
+\chapter{Metodologia}
+
+Descreva aqui a metodologia utilizada.
+
+% ======================================================================
+\chapter{Resultados}
+
+Apresente os resultados obtidos.
+
+% ======================================================================
+\chapter{Conclusão}
+
+Sintetize as conclusões do trabalho \citeonline{lamport1994}~\cite{cormen2022}.
+
+% ── Elementos pós-textuais ─────────────────────────────────────────────
+\backmatter
+
+% Referências com BibTeX + abntex2cite:
+\bibliography{references}
+
+% Alternativa sem BibTeX (referências manuais):
+% \begin{thebibliography}{9}
+%   \bibitem{cormen2022}
+%     CORMEN, T. H. et al.
+%     \textit{Introdução a Algoritmos}. 4. ed. MIT Press, 2022.
+%   \bibitem{lamport1994}
+%     LAMPORT, L.
+%     \textit{\LaTeX: A Document Preparation System}. 2. ed.
+%     Addison-Wesley, 1994.
+% \end{thebibliography}
+
+\end{document}
