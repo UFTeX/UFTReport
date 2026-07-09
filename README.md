@@ -1,15 +1,12 @@
-# uftreport — Classe LaTeX UFT/CC
+# Manual de Utilização e Elaboração de Relatórios Técnicos e Trabalhos de Disciplina Utilizando a Classe `uftreport.cls`
 
-Classe LaTeX para produção de relatórios técnicos, manuais, projetos e trabalhos de
-disciplinas do **Curso de Ciência da Computação** da Universidade Federal do
-Tocantins (UFT), Campus Universitário de Palmas.
+A classe `uftreport` formata **relatórios técnicos, manuais, projetos e trabalhos de disciplina** do Curso de Ciência da Computação da Universidade Federal do Tocantins (UFT), Campus Universitário de Palmas.
 
-Inspirada no `techrep-ic.sty` do IC/UNICAMP (J. Stolfi et al.) e nas classes
-`uftmanuais.cls` e `uftreport.cls` da UFT/CC.
+Inspirada no `techrep-ic.sty` do IC/UNICAMP (J. Stolfi et al.) e nas classes `uftmanuais.cls` e `uftreport.cls` da UFT/CC.
 
 ---
 
-## Estrutura de arquivos esperada
+## 1. Pré-requisitos e Estrutura de Arquivos
 
 ```
 meu-documento/
@@ -19,15 +16,30 @@ meu-documento/
     └── logouft.pdf      ← logo da UFT (também aceita .png)
 ```
 
----
+## 2. Como Compilar
 
-## Opções de classe
+```bash
+pdflatex meu-documento.tex
+bibtex   meu-documento        # se houver referências com BibTeX
+pdflatex meu-documento.tex
+pdflatex meu-documento.tex    # terceira passagem para referências cruzadas
+```
+
+> A classe usa o pacote `zref` para determinar a página inicial correta da numeração árabe. São necessárias **ao menos duas passagens** do `pdflatex` para que a paginação fique correta.
+
+## 3. Opções de Classe
 
 ```latex
 \documentclass[<tipo>, <fonte>]{uftreport}
 ```
 
-### Tipo de documento (obrigatório — escolha um)
+### 3.1. Tamanho de Fonte
+
+* `10pt`
+* `11pt`
+* `12pt` (Padrão)
+
+### 3.2. Tipo de Documento (obrigatório — escolha um)
 
 | Opção | Descrição |
 |---|---|
@@ -42,19 +54,7 @@ O tipo influencia:
 - O texto da linha de tipo/data na caixa de conteúdo da capa
 - O texto gerado automaticamente na folha de rosto (`\makefrontpage`)
 
-Para `projectresearch` e `projectextension`, o texto da folha de rosto indica
-que o documento é um projeto submetido ao curso e lista o orientador (se
-definido via `\advisor{}`).
-
-### Tamanho de fonte (opcional)
-
-| Opção | Descrição |
-|---|---|
-| `10pt` | Fonte 10pt |
-| `11pt` | Fonte 11pt |
-| `12pt` | Fonte 12pt **(padrão)** |
-
-### Exemplo completo
+Para `projectresearch` e `projectextension`, o texto da folha de rosto indica que o documento é um projeto submetido ao curso e lista o orientador (se definido via `\advisor{}`).
 
 ```latex
 \documentclass[report, 12pt]{uftreport}
@@ -64,152 +64,35 @@ definido via `\advisor{}`).
 \documentclass[techreport, 12pt]{uftreport}
 ```
 
----
-
-## Comandos de metadados
+## 4. Comandos de Metadados
 
 Todos devem ser declarados no **preâmbulo**, antes de `\begin{document}`.
 
-### Título
+| Comando | Argumentos | Função | Exemplo |
+| :--- | :--- | :--- | :--- |
+| `\title{#1}` | Título | Título do trabalho. | `\title{Implementação de Somadores Aproximados em FPGA}` |
+| `\foreigntitle{#1}` | Título em inglês | Opcional. | `\foreigntitle{Implementation of Approximate Adders on FPGA}` |
+| `\author{#1}{#2}` | Nome, Sobrenome | Autor. Repetível para coautores. O primeiro `\author` define `\@authname`/`\@authsurn`, usados na folha de rosto. | `\author{Ana}{Silva}` |
+| `\advisor{#1}{#2}{#3}{#4}` | Título, Nome, Sobrenome, Grau | Orientador. Repetível para coorientadores. Se nenhum for declarado, o campo não aparece na capa. | `\advisor{Prof.}{João}{Silva}{Dr.}` |
+| `\examiner{#1}{#2}{#3}` | Título, Nome, Sobrenome | Membro da banca examinadora. Repetível. Armazenado, mas não impresso automaticamente — use em folhas de aprovação customizadas. | `\examiner{Prof.}{Marcos}{Lima}` |
+| `\department{#1}` | Código | Curso/Unidade Acadêmica (`CC`, `LC`, `EC` ou `EE`; padrão `CC`). | `\department{CC}` |
+| `\class{#1}` | Disciplina/Turma | Aparece na capa e na folha de rosto. Omita se o documento não for trabalho de disciplina. | `\class{Algoritmos e Estruturas de Dados II -- 2024.1}` |
+| `\TRNumber{#1}` | Número | Usado apenas com `techreport`; gera `UFT-CC-<ano>-<número>` na capa. Padrão `000`. | `\TRNumber{042}` |
+| `\date{#1}{#2}{#3}` | Dia, Mês, Ano | Data do documento. | `\date{1}{6}{2025}` |
+| `\keyword{#1}` | Palavra-chave | Repetível. Impressa ao final do ambiente `abstract`. | `\keyword{FPGA}` |
+| `\foreignkeyword{#1}` | Palavra-chave (EN) | Repetível. Impressa ao final do ambiente `foreignabstract`. | `\foreignkeyword{FPGA}` |
+| `\field{#1}` | Campo de pesquisa | Metadado auxiliar, armazenado para uso futuro/folhas customizadas. | `\field{Computação Aproximada}` |
 
-```latex
-\title{Título do Trabalho}
-\foreigntitle{Title of the Work}   % título em inglês (opcional)
-```
-
-### Autor(es)
-
-```latex
-\author{Nome}{Sobrenome}
-```
-
-Pode ser chamado múltiplas vezes para adicionar coautores:
-
-```latex
-\author{Ana}{Silva}
-\author{Bruno}{Costa}
-```
-
-O primeiro `\author` define `\@authname` e `\@authsurn`, usados internamente
-na folha de rosto.
-
-### Orientador(es)
-
-```latex
-\advisor{Título}{Nome}{Sobrenome}{Grau}
-```
-
-| Parâmetro | Exemplo |
-|---|---|
-| Título | `Prof.` / `Profa.` |
-| Nome | `João` |
-| Sobrenome | `Silva` |
-| Grau | `Dr.` / `Dra.` / `Me.` |
-
-Pode ser chamado múltiplas vezes para adicionar coorientadores. Se nenhum
-orientador for declarado, o campo não aparece na capa.
-
-```latex
-\advisor{Prof.}{João}{Silva}{Dr.}
-\advisor{Profa.}{Maria}{Souza}{Dra.}
-```
-
-### Banca examinadora
-
-```latex
-\examiner{Título}{Nome}{Sobrenome}
-```
-
-Pode ser chamado múltiplas vezes. Armazenado internamente mas não impresso
-automaticamente — use conforme necessário em folhas de aprovação customizadas.
-
-### Curso / Departamento
-
-```latex
-\department{código}
-```
-
-| Código | Nome completo |
-|---|---|
-| `CC` | Ciência da Computação **(padrão)** |
-| `LC` | Licenciatura em Computação |
-| `EC` | Engenharia Civil |
-| `EE` | Engenharia Elétrica |
-
-### Disciplina / Turma
-
-```latex
-\class{Algoritmos e Estruturas de Dados II -- 2024.1}
-```
-
-Quando definido, aparece na linha de tipo/data da capa e no texto da folha de
-rosto. Omita o comando se o documento não for um trabalho de disciplina.
-
-### Número do relatório técnico
-
-Usado apenas com a opção `techreport`:
-
-```latex
-\TRNumber{042}
-```
-
-Gera a identificação `UFT-CC-<ano>-042` na capa. O valor padrão é `000`.
-
-### Data
-
-```latex
-\date{dia}{mês}{ano}
-```
-
-```latex
-\date{1}{6}{2025}
-```
-
-### Palavras-chave
-
-```latex
-\keyword{Computação Aproximada}
-\keyword{FPGA}
-\keyword{Meta-heurísticas}
-```
-
-Cada chamada adiciona uma palavra-chave. Aparecem automaticamente ao final do
-ambiente `abstract`.
-
-### Palavras-chave em inglês
-
-```latex
-\foreignkeyword{Approximate Computing}
-\foreignkeyword{FPGA}
-\foreignkeyword{Metaheuristics}
-```
-
-Aparecem automaticamente ao final do ambiente `foreignabstract`.
-
-### Campos de pesquisa (metadado auxiliar)
-
-```latex
-\field{Computação Aproximada}
-\field{Síntese de Circuitos}
-```
-
-Armazenado internamente para uso futuro ou em folhas customizadas.
-
----
-
-## Estrutura do documento
-
-O documento deve seguir esta sequência:
+## 5. Estrutura do Documento
 
 ```latex
 \begin{document}
 
   % ── Pré-textuais ──────────────────────────────────────────
   \frontmatter          % desativa numeração, estilo vazio
-  \maketitle            % imprime a capa
-  \makefrontpage        % imprime a folha de rosto (opcional)
+  \maketitle             % imprime a capa
+  \makefrontpage         % imprime a folha de rosto (opcional)
 
-  % Elementos opcionais, nesta ordem:
   \dedication{Texto da dedicatória.}
 
   \begin{acknowledgement}
@@ -226,10 +109,10 @@ O documento deve seguir esta sequência:
 
   \tableofcontents
   \listoffigures        % opcional
-  \listoftables         % opcional
+  \listoftables          % opcional
 
   % ── Texto principal ───────────────────────────────────────
-  \mainmatter           % ativa numeração árabe
+  \mainmatter            % ativa numeração árabe
   \ChapterStart{first}{Introdução}   % marca a página inicial
 
   \chapter{Introdução}
@@ -245,51 +128,16 @@ O documento deve seguir esta sequência:
 \end{document}
 ```
 
-### `\frontmatter`
+| Comando | Função |
+| :--- | :--- |
+| `\frontmatter` | Desativa a numeração de páginas e aplica estilo vazio. Deve vir antes de `\maketitle`. |
+| `\maketitle` | Imprime a capa no estilo UFT/CC (moldura azul à esquerda, moldura amarela à direita, caixa central com título e autores, logo e banner institucional no topo). Chamar uma única vez. |
+| `\makefrontpage` | Imprime a folha de rosto com autor(es), título e texto descritivo gerado a partir do tipo de documento e da disciplina. |
+| `\mainmatter` | Ativa a numeração árabe e restaura o estilo de página com número. Deve vir antes do primeiro `\chapter`. |
+| `\ChapterStart{id}{título}` | Marca a página de início do texto principal para que a numeração árabe comece nela. Chamar imediatamente antes do primeiro `\chapter`. `id` é um identificador interno (ex.: `first`); `título` é o título do capítulo correspondente. |
+| `\backmatter` | Encerra o texto principal e prepara o ambiente para referências e apêndices. |
 
-Desativa a numeração de páginas e aplica estilo vazio. Deve vir antes de
-`\maketitle`.
-
-### `\maketitle`
-
-Imprime a capa no estilo UFT/CC (inspirado no IC/UNICAMP): moldura azul à
-esquerda, moldura amarela à direita, caixa central única com título e autores,
-logo e banner institucional no topo. Deve ser chamado uma única vez.
-
-### `\makefrontpage`
-
-Imprime a folha de rosto com nome do(s) autor(es), título e texto descritivo
-gerado automaticamente a partir do tipo de documento e da disciplina definida.
-
-### `\mainmatter`
-
-Ativa a numeração árabe e restaura o estilo de página com número. Deve vir
-antes do primeiro `\chapter`.
-
-### `\ChapterStart{id}{título}`
-
-Marca a página de início do texto principal para que a numeração árabe comece
-nela, não na primeira página após `\mainmatter`. Deve ser chamado imediatamente
-antes do primeiro `\chapter`.
-
-| Parâmetro | Descrição |
-|---|---|
-| `id` | Identificador interno (ex.: `first`) |
-| `título` | Título do capítulo correspondente |
-
-```latex
-\mainmatter
-\ChapterStart{first}{Introdução}
-\chapter{Introdução}
-```
-
-### `\backmatter`
-
-Encerra o texto principal e prepara o ambiente para referências e apêndices.
-
----
-
-## Ambientes pré-textuais
+## 6. Ambientes Especiais
 
 ### `abstract`
 
@@ -299,9 +147,7 @@ Encerra o texto principal e prepara o ambiente para referências e apêndices.
 \end{abstract}
 ```
 
-As palavras-chave declaradas com `\keyword{}` são impressas automaticamente ao
-final, separadas da última linha por espaço e precedidas pelo rótulo
-**Palavras-chave:** em uma linha própria.
+As palavras-chave declaradas com `\keyword{}` são impressas automaticamente ao final, precedidas do rótulo **Palavras-chave:** em linha própria.
 
 ### `foreignabstract`
 
@@ -311,8 +157,7 @@ final, separadas da última linha por espaço e precedidas pelo rótulo
 \end{foreignabstract}
 ```
 
-As palavras-chave declaradas com `\foreignkeyword{}` são impressas
-automaticamente ao final, precedidas por **Keywords:** em uma linha própria.
+As palavras-chave declaradas com `\foreignkeyword{}` são impressas automaticamente ao final, precedidas de **Keywords:**.
 
 ### `acknowledgement`
 
@@ -328,15 +173,37 @@ automaticamente ao final, precedidas por **Keywords:** em uma linha própria.
 \dedication{À minha família, pelo apoio incondicional.}
 ```
 
-Imprime o texto alinhado à direita no centro vertical da página.
+Imprime o texto alinhado à direita, no centro vertical da página.
 
----
+### Citações longas (`quote`)
 
-## Formatação automática
+O ambiente `quote` é redefinido com recuo esquerdo de 4 cm e fonte menor, conforme as normas ABNT:
+
+```latex
+\begin{quote}
+  Texto da citação longa...
+\end{quote}
+```
+
+### Listas de símbolos e abreviaturas
+
+```latex
+% No preâmbulo:
+\makelosymbols
+\makeloabbreviations
+
+% No texto:
+\symbl{alpha}{Coeficiente de atenuação}
+\abbrev{FPGA}{Field-Programmable Gate Array}
+
+% Onde quiser imprimir as listas:
+\printlosymbols
+\printloabbreviations
+```
+
+## 7. Formatação Automática
 
 ### Cores institucionais
-
-Definidas como cores nomeadas e disponíveis em todo o documento:
 
 | Nome | RGB | Uso |
 |---|---|---|
@@ -345,40 +212,17 @@ Definidas como cores nomeadas e disponíveis em todo o documento:
 | `uftamarelo` | 253, 185, 19 | Filetes de capítulo, separador da capa |
 | `uftcinza` | 100, 100, 100 | Subseções, números de linha |
 
-Exemplo de uso em texto:
-
 ```latex
 {\color{uftazul} texto em azul UFT}
 ```
 
-### Capítulos
+### Capítulos e seções
 
-O cabeçalho de capítulo é gerado automaticamente com barra azul e filete
-amarelo. O estilo varia conforme o tipo de documento:
-
-- **`manual`**: barra mais alta (1,1 cm), fonte `\large`
-- **`report` / `techreport`**: barra menor (0,9 cm), fonte `\normalsize`
-
-Capítulos sem número (`\chapter*{}`) usam o mesmo estilo visual.
-
-### Seções
-
-| Nível | Formatação |
-|---|---|
-| `\section` | Negrito azul UFT + linha horizontal |
-| `\subsection` | Negrito cinza |
-| `\subsubsection` | Cinza, sem negrito |
-
-A numeração vai até o nível `\subsubsection` (`secnumdepth=3`).
-
-### Sumário
-
-Todos os níveis (capítulo, seção, subseção, subsubseção) são exibidos em
-**azul UFT**, incluindo os números de página.
+* Cabeçalho de capítulo gerado automaticamente com barra azul e filete amarelo. `manual` usa barra mais alta (1,1 cm) e fonte `\large`; `report`/`techreport` usam barra menor (0,9 cm) e `\normalsize`. Capítulos sem número (`\chapter*{}`) usam o mesmo estilo visual.
+* `\section`: negrito azul UFT + linha horizontal. `\subsection`: negrito cinza. `\subsubsection`: cinza, sem negrito. Numeração até `\subsubsection` (`secnumdepth=3`).
+* Sumário: todos os níveis exibidos em azul UFT, incluindo números de página.
 
 ### Listagens de código
-
-O ambiente `lstlisting` vem pré-configurado:
 
 ```latex
 \begin{lstlisting}[language=Python, caption={Exemplo}]
@@ -387,18 +231,7 @@ def hello():
 \end{lstlisting}
 ```
 
-Configurações aplicadas automaticamente:
-
-- Numeração de linhas à esquerda
-- Fonte sans-serif em tamanho `\footnotesize`
-- Fundo cinza claro, borda verde UFT
-- Palavras-chave em azul UFT em negrito
-- Comentários em cinza itálico
-- Strings em verde UFT
-- Quebra automática de linhas longas
-
-Para alterar a linguagem padrão ou outras opções, use `\lstset{}` no preâmbulo
-**após** `\begin{document}` — as configurações da classe servem como base.
+Configuração automática: numeração de linhas à esquerda; fonte sans-serif `\footnotesize`; fundo cinza claro com borda verde UFT; palavras-chave em azul UFT negrito; comentários em cinza itálico; strings em verde UFT; quebra automática de linhas longas. Para alterar a linguagem padrão, use `\lstset{}` no preâmbulo **após** `\begin{document}`.
 
 ### Margens e espaçamento
 
@@ -414,106 +247,22 @@ Para alterar a linguagem padrão ou outras opções, use `\lstset{}` no preâmbu
 
 ### Figuras e tabelas
 
-Os contadores de figura e tabela são independentes de capítulo (numeração
-contínua ao longo do documento).
-
-No sumário de figuras e tabelas, os rótulos aparecem como:
+Contadores independentes de capítulo (numeração contínua). No sumário de figuras/tabelas:
 
 ```
 Figura 1 -- Descrição
 Tabela 3 -- Descrição
 ```
 
-### Citações longas
+## 8. Pacotes Carregados Automaticamente
 
-O ambiente `quote` é redefinido com recuo esquerdo de 4 cm e fonte menor,
-conforme as normas ABNT:
+Não é necessário declará-los novamente no preâmbulo:
 
-```latex
-\begin{quote}
-  Texto da citação longa...
-\end{quote}
-```
+`fontenc` · `babel` · `inputenc` · `graphicx` · `xcolor` · `geometry` · `setspace` · `indentfirst` · `lastpage` · `amsfonts` · `amsthm` · `amssymb` · `booktabs` · `multirow` · `tabularx` · `wrapfig` · `listings` · `ifthen` · `hyphenat` · `ltxcmds` · `xstring` · `tikz` · `pdfpages` · `wallpaper` · `placeins` · `titlesec` · `chngcntr` · `tocbibind` · `tocloft` · `zref` · `caption` · `hyperref`
 
----
+Pacotes adicionais específicos do documento devem ser declarados normalmente no preâmbulo.
 
-## Listas auxiliares
-
-### Lista de símbolos
-
-No preâmbulo:
-
-```latex
-\makelosymbols
-```
-
-No texto, para registrar um símbolo:
-
-```latex
-\symbl{alpha}{Coeficiente de atenuação}
-```
-
-Para imprimir a lista:
-
-```latex
-\printlosymbols
-```
-
-### Lista de abreviaturas
-
-No preâmbulo:
-
-```latex
-\makeloabbreviations
-```
-
-No texto:
-
-```latex
-\abbrev{FPGA}{Field-Programmable Gate Array}
-```
-
-Para imprimir:
-
-```latex
-\printloabbreviations
-```
-
----
-
-## Pacotes carregados automaticamente
-
-A classe carrega os seguintes pacotes. **Não é necessário declará-los
-novamente no preâmbulo:**
-
-`fontenc` · `babel` · `inputenc` · `graphicx` · `xcolor` · `geometry` ·
-`setspace` · `indentfirst` · `lastpage` · `amsfonts` · `amsthm` · `amssymb` ·
-`booktabs` · `multirow` · `tabularx` · `wrapfig` · `listings` · `ifthen` ·
-`hyphenat` · `ltxcmds` · `xstring` · `tikz` · `pdfpages` · `wallpaper` ·
-`placeins` · `titlesec` · `chngcntr` · `tocbibind` · `tocloft` · `zref` ·
-`caption` · `hyperref`
-
-Pacotes adicionais específicos do documento devem ser declarados normalmente
-no preâmbulo.
-
----
-
-## Compilação
-
-```bash
-pdflatex meu-documento.tex
-bibtex   meu-documento        # se houver referências com BibTeX
-pdflatex meu-documento.tex
-pdflatex meu-documento.tex    # terceira passagem para referências cruzadas
-```
-
-> A classe usa o pacote `zref` para determinar a página inicial correta da
-> numeração árabe. São necessárias **ao menos duas passagens** do `pdflatex`
-> para que a paginação fique correta.
-
----
-
-## Exemplo mínimo
+## 9. Exemplo Completo (Trabalho de Disciplina)
 
 ```latex
 \documentclass[report, 12pt]{uftreport}
@@ -568,72 +317,48 @@ Texto do capítulo.
 \end{document}
 ```
 
----
-
-## Exemplo para projeto de pesquisa (PIBIC, TCC)
+Variações rápidas de preâmbulo para os outros tipos de documento:
 
 ```latex
+% Projeto de pesquisa (PIBIC, TCC)
 \documentclass[projectresearch, 12pt]{uftreport}
-
 \title{Exploração de Espaço de Design com GRASP para Filtros Aproximados}
 \author{Pedro}{Almeida}
 \advisor{Prof.}{João}{Silva}{Dr.}
-
 \department{CC}
 \date{1}{6}{2025}
-
 \keyword{Computação Aproximada}
 \keyword{Meta-heurísticas}
 ```
 
----
-
-## Exemplo para projeto de extensão
-
 ```latex
+% Projeto de extensão
 \documentclass[projectextension, 12pt]{uftreport}
-
 \title{Oficinas de Programação para Estudantes do Ensino Médio}
 \author{Ana}{Costa}
 \advisor{Profa.}{Maria}{Souza}{Dra.}
-
 \department{CC}
 \date{1}{6}{2025}
-
 \keyword{Extensão Universitária}
 \keyword{Ensino de Programação}
 ```
 
----
-
-## Exemplo para relatório técnico numerado
-
 ```latex
+% Relatório técnico numerado
 \documentclass[techreport, 12pt]{uftreport}
-
 \title{Caracterização de Multiplicadores Aproximados}
 \author{João}{Barbosa}
 \TRNumber{007}
 \department{CC}
 \date{15}{3}{2025}
-
 \keyword{Multiplicadores}
 \keyword{Computação Aproximada}
 ```
 
----
+## 10. Notas e Limitações
 
-## Notas
-
-- O logo da UFT deve estar em `logos/logouft.pdf` (ou `logos/logouft.png`).
-  Se nenhum arquivo for encontrado, a capa exibe o espaço sem logo.
-- Não redefina `\titleformat{\section}`, `\titleformat{\chapter}` ou
-  `hyperref` no preâmbulo — a classe já os configura. Use `\hypersetup{}` para
-  sobrescrever apenas opções específicas (ex.: cor de URL).
-- O comando `\and` fica desativado após `\maketitle`. Para múltiplos autores,
-  use chamadas repetidas de `\author{}{}`.
+- O logo da UFT deve estar em `logos/logouft.pdf` (ou `logos/logouft.png`). Se nenhum arquivo for encontrado, a capa exibe o espaço sem logo.
+- Não redefina `\titleformat{\section}`, `\titleformat{\chapter}` ou `hyperref` no preâmbulo — a classe já os configura. Use `\hypersetup{}` para sobrescrever apenas opções específicas (ex.: cor de URL).
+- O comando `\and` fica desativado após `\maketitle`. Para múltiplos autores, use chamadas repetidas de `\author{}{}`.
 - O nome do arquivo da classe é `uftreport.cls` (sem o sufixo `-cc`).
-- Ao usar `abntex2cite`, **não** inclua as linhas
-  `\renewcommand{\backrefpagesname}{}`, `\renewcommand{\backref}{}` nem
-  `\renewcommand*{\backrefalt}[4]{}` no preâmbulo — a classe não carrega o
-  pacote `backref` e esses comandos não existem.
+- Ao usar `abntex2cite`, **não** inclua as linhas `\renewcommand{\backrefpagesname}{}`, `\renewcommand{\backref}{}` nem `\renewcommand*{\backrefalt}[4]{}` no preâmbulo — a classe não carrega o pacote `backref` e esses comandos não existem.

@@ -148,7 +148,7 @@
 }
 \RequirePackage[savepos,totpages,titleref,dotfill,counter,user]{zref}
 \RequirePackage[labelfont=bf,textfont=bf,labelsep=endash,
-                singlelinecheck=false,justification=centering]{caption}
+                singlelinecheck=false,justification=justified]{caption}
 \RequirePackage[pdftex,unicode=true,plainpages=false,pdfpagelabels,
                 colorlinks=true,
                 citecolor=black,linkcolor=black,
